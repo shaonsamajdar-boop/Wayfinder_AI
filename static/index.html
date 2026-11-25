@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayfinder — Explore with intelligence</title>
+<meta name="theme-color" content="#0b0e13">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@5.4.0/dist/maplibre-gl.css" rel="stylesheet">
+<link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><div class="brandmark">✳</div><div><strong>wayfinder<span class="accent">.</span></strong><small>INTELLIGENT EXPLORATION</small></div></div>
+    <div class="side-label">WORKSPACE</div>
+    <nav class="nav">
+      <button class="nav-link active" data-tab="explore"><span class="navicon">✦</span> Discover <span class="nav-hint">↗</span></button>
+      <button class="nav-link" data-tab="nearby"><span class="navicon">◎</span> Nearby places</button>
+      <button class="nav-link" data-tab="routes"><span class="navicon">⌁</span> Directions</button>
+      <button class="nav-link" data-tab="trips"><span class="navicon">▦</span> Trip planner</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="location-box"><span class="loc-dot"></span><div><span class="mini-label">CURRENT STARTING POINT</span><strong id="location-label">Not selected</strong></div></div>
+      <button class="ghost-btn" id="locate-btn">⌖ &nbsp; Use my location</button>
+      <div class="side-footer">Powered by <b>Gemini</b> + <b>Geoapify</b><br>Built for the curious.</div>
+    </div>
+  </aside>
+  <main class="workspace">
+    <header class="topbar"><div class="crumb">WORKSPACE <span>/</span> <b id="crumb-active">Discover</b></div><div class="topright"><button type="button" class="ai-indicator" id="ai-indicator" title="Open AI assistant and connection status"><span class="status-dot" id="ai-status-dot"></span><span id="connection-state">Checking AI…</span></button><span class="avatar">W</span></div></header>
+    <div class="content" id="content">
+      <div class="intro"><div class="eyebrow"><span class="sparkle">✳</span> YOUR WORLD, REIMAGINED</div><h1>Go somewhere <em>extraordinary.</em></h1><p>Find your next favorite spot, navigate with confidence, or plan a journey worth remembering. Just ask.</p></div>
+      <section id="tab-explore" class="tabview active">
+        <div style="background:linear-gradient(145deg,#161c25,#121820);border:1px solid #29333e;border-radius:17px;padding:22px;box-shadow:0 22px 70px #0005">
+          <svg viewBox="0 0 660 270" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Wayfinder AI navigation illustration" style="width:100%;height:auto;display:block;border-radius:12px">
+            <rect width="660" height="270" rx="12" fill="#0f151c"/>
+            <path d="M0 55 H660 M0 115 H660 M0 175 H660 M0 235 H660 M110 0 V270 M220 0 V270 M330 0 V270 M440 0 V270 M550 0 V270" stroke="#1b2530" stroke-width="1"/>
+            <path d="M55 215 C155 210, 205 140, 315 135 C420 130, 465 78, 565 72" stroke="#29483b" stroke-width="10" stroke-linecap="round"/>
+            <path d="M55 215 C155 210, 205 140, 315 135 C420 130, 465 78, 565 72" stroke="#b0f4ca" stroke-width="3" stroke-dasharray="6 5" stroke-linecap="round"/>
+            <circle cx="55" cy="215" r="14" fill="#6ecbff" fill-opacity="0.16"/>
+            <circle cx="55" cy="215" r="6" fill="#6ecbff" stroke="#0d1821" stroke-width="2"/>
+            <rect x="24" y="233" width="84" height="22" rx="6" fill="#152029" stroke="#2a3d4d"/>
+            <text x="66" y="248" text-anchor="middle" fill="#9fd9ff" font-family="DM Sans,sans-serif" font-size="10" font-weight="700">Start Point</text>
+            <circle cx="315" cy="135" r="5" fill="#131c22" stroke="#b0f4ca" stroke-width="2"/>
+            <rect x="267" y="99" width="96" height="22" rx="6" fill="#17232a" stroke="#2c3e47"/>
+            <text x="315" y="114" text-anchor="middle" fill="#c2efcc" font-family="DM Sans,sans-serif" font-size="10" font-weight="600">Smart Route</text>
+            <circle cx="565" cy="72" r="18" fill="#b0f4ca" fill-opacity="0.14"/>
+            <path d="M565 53 C556 53 550 60 550 68 C550 78 565 89 565 89 C565 89 580 78 580 68 C580 60 574 53 565 53 Z" fill="#b0f4ca" stroke="#102219" stroke-width="1.8"/>
+            <circle cx="565" cy="68" r="4" fill="#102219"/>
+            <rect x="502" y="96" width="126" height="22" rx="6" fill="#162720" stroke="#365c48"/>
+            <text x="565" y="111" text-anchor="middle" fill="#d1f7d8" font-family="DM Sans,sans-serif" font-size="10" font-weight="700">Destination Pin</text>
+            <rect x="424" y="214" width="210" height="36" rx="9" fill="#141d24" stroke="#293842"/>
+            <circle cx="441" cy="232" r="4.5" fill="#b0f4ca"/>
+            <text x="453" y="236" fill="#dcebe2" font-family="DM Sans,sans-serif" font-size="10.5" font-weight="600">Wayfinder AI + Geoapify Map</text>
+          </svg>
+        </div>
+      </section>
+      <section id="tab-nearby" class="tabview"><div class="form-card"><div class="section-header"><div><span class="mini-label">DISCOVERY</span><h2>Find something nearby.</h2></div><span class="form-icon">◎</span></div><form id="nearby-form"><label>WHAT ARE YOU LOOKING FOR?<input id="place-type" value="restaurant" required></label><div class="form-row"><label>SEARCH RADIUS <select id="place-radius"><option value="2000">Within 2 km</option><option value="5000" selected>Within 5 km</option><option value="10000">Within 10 km</option><option value="20000">Within 20 km</option></select></label><button class="primary-btn" type="submit">Search places <span>↗</span></button></div></form></div></section>
+      <section id="tab-routes" class="tabview"><div class="form-card"><div class="section-header"><div><span class="mini-label">NAVIGATION</span><h2>Make every turn count.</h2></div><span class="form-icon">⌁</span></div><form id="route-form"><div class="route-start-control"><div><span class="mini-label">STARTING POINT</span><strong id="route-origin-label">Not selected yet</strong></div><button type="button" id="route-change-start" class="route-change-btn">Change start ↗</button></div><label>DESTINATION<input id="route-destination" required></label><div class="form-row"><label>TRAVEL MODE<select id="route-mode"><option value="drive">Drive</option><option value="walk">Walk</option><option value="bicycle">Cycle</option></select></label><button class="primary-btn" type="submit">Calculate route <span>↗</span></button></div></form></div></section>
+      <section id="tab-trips" class="tabview"><div class="form-card"><div class="section-header"><div><span class="mini-label">JOURNEY DESIGN</span><h2>Every journey starts here.</h2></div><span class="form-icon">▦</span></div><form id="trip-form"><label>WHERE TO?<input id="trip-destination" required></label><div class="form-row triple"><label>DAYS<input id="trip-days" type="number" min="1" max="14" value="5" required></label><label>TRAVELERS<input id="trip-travelers" type="number" min="1" max="20" value="2" required></label><label>BUDGET (₹)<input id="trip-budget" type="number" min="0" value="15000"></label></div><label>YOUR INTERESTS<input id="trip-interests"></label><button class="primary-btn wide" type="submit">Generate itinerary <span>↗</span></button></form></div></section>
+      <div id="result-area" class="results" aria-live="polite"></div>
+    </div>
+  </main>
+  <aside class="map-pane"><div class="map-header"><div><span class="mini-label">LIVE MAP</span><h3>Your world, in view.</h3></div><span class="map-live"><i></i> EXPLORE</span></div><div id="map"></div><div class="map-bottom"><div id="map-caption">Select a location to start exploring.</div><button id="reset-map" title="Reset map view">↺</button></div></aside>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<!-- Dedicated persistent Gemini conversation drawer -->
+<div class="assistant-shell" id="assistant-shell">
+  <section class="assistant-drawer" id="assistant-drawer" aria-label="Wayfinder AI chat" hidden>
+    <div class="assistant-heading">
+      <div class="assistant-monogram" aria-hidden="true">✳</div>
+      <div class="assistant-heading-copy"><strong>Ask Wayfinder</strong><small id="assistant-model">Your Gemini companion</small></div>
+      <button type="button" id="assistant-close" class="assistant-icon-btn" aria-label="Close AI chat">✕</button>
+    </div>
+    <div class="assistant-connection" id="assistant-connection">
+      <span id="assistant-connection-text">Checking your Gemini connection…</span>
+      <button type="button" id="assistant-retry" title="Test Gemini connection again">↻ Retest</button>
+    </div>
+    <div id="assistant-log" class="assistant-log" role="log" aria-live="polite">
+      <div class="assistant-msg bot"><span>Hello! I'm your travel companion. Ask me anything, or use the main workspace for live places, routes and mapped itineraries.</span></div>
+    </div>
+    <form id="assistant-form" class="assistant-compose"><input id="assistant-input" autocomplete="off" maxlength="2500" aria-label="AI message" required><button type="submit" aria-label="Send to Gemini">➤</button></form>
+    <small class="assistant-footnote">AI suggestions aren't verified live information.</small>
+  </section>
+  <button type="button" class="assistant-fab" id="assistant-fab" aria-label="Open AI chat" aria-expanded="false" aria-controls="assistant-drawer"><span aria-hidden="true">✳</span><span class="fab-label">Ask AI</span></button>
+</div>
+<div class="modal-cover" id="loc-modal" hidden><div class="modal"><div class="modal-top"><span class="mini-label">SET YOUR ORIGIN</span><button id="close-modal" aria-label="Close">✕</button></div><h2>Where are you starting from?</h2><p>Use a place name instead of sharing GPS coordinates.</p><form id="origin-form"><input id="origin-query" aria-label="Starting location" required><button class="primary-btn" type="submit">Search <span>↗</span></button></form><div id="origin-choice-list" class="location-choices" aria-live="polite"></div><div class="origin-alternatives"><button class="text-btn" id="modal-geolocate">⌖ Use device location</button><button class="text-btn" id="pick-map-origin">◎ Pick starting point on map</button></div></div></div>
+<script src="https://unpkg.com/maplibre-gl@5.4.0/dist/maplibre-gl.js"></script>
+<script src="/static/app.js"></script>
+</body></html>
